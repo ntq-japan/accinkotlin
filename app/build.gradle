@@ -1,0 +1,91 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "vn.com.ntq_solition.app"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', 'WEB_API', '"http://ntq-solution.com.vn:8080"'
+            buildConfigField 'int', 'API_REQUEST_POOL_SIZE', '10'
+        }
+        debug {
+            buildConfigField 'String', 'WEB_API', '"http://ntq-solution.com.vn:8080"'
+            buildConfigField 'int', 'API_REQUEST_POOL_SIZE', '10'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+    compileOptions.incremental = false
+    dexOptions {
+        javaMaxHeapSize "2048M"
+    }
+}
+
+dependencies {
+    // Basic setting
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.android.support:design:$support"
+    implementation "com.android.support:appcompat-v7:$support"
+    implementation "com.android.support:recyclerview-v7:$support"
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
+
+    // Gson
+    implementation "com.google.code.gson:gson:$gson"
+
+    // Retrofit 2
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+
+    // Dagger 2
+    compileOnly 'javax.annotation:jsr250-api:1.0' // -> Fix bug Java 9 (javax.annotation.Generated)
+    implementation "com.google.dagger:dagger:$dagger"
+    implementation "com.google.dagger:dagger-android:$dagger"
+    implementation "com.google.dagger:dagger-android-support:$dagger"
+    kapt "com.google.dagger:dagger-compiler:$dagger"
+    kapt "com.google.dagger:dagger-android-processor:$dagger"
+
+    // ButterKnife
+    implementation "com.jakewharton:butterknife:$butterknife"
+    kapt "com.jakewharton:butterknife-compiler:$butterknife"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glide"
+    kapt "com.github.bumptech.glide:compiler:$glide"
+
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:$lifecycle"
+    implementation "android.arch.lifecycle:viewmodel:$lifecycle"
+    implementation "android.arch.lifecycle:livedata:$lifecycle"
+    kapt "android.arch.lifecycle:compiler:$lifecycle"
+
+    // Room (use 1.1.0-alpha2 for latest alpha)
+    implementation "android.arch.persistence.room:runtime:$room"
+    kapt "android.arch.persistence.room:compiler:$room"
+
+    // Basic testing library
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
